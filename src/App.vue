@@ -1,21 +1,12 @@
 <template>
   <div id="app" class="metro">
 
-    <div class="flex justify-between pt-24 pr-32 pl-4 relative">
-      <div class="metro absolute w-5 h-5 bg-blue-500" :style="positionStyle"></div>
-      <Station
-        v-for="station in line"
-        :name="station.name"
-        :key="station.id"
-      />
-    </div>
+    <MetroLine :stations="line11Stations"/>
   </div>
 </template>
 
 <script>
-import Station from '@/components/Station.vue'
-
-import axios from 'axios'
+import MetroLine from '@/components/MetroLine.vue'
 
 const ligne11 = [
   // {"id": "chatelet", "name": "Châtelet", "width": 283, "height":161.5},
@@ -34,49 +25,14 @@ const ligne11 = [
 ]
 
 export default {
-
   name: 'app',
   components: {
-    Station
+    MetroLine
   },
   data () {
     return {
-      line: [],
-      leftPos: 0
+      line11Stations: ligne11
     }
-  },
-  computed: {
-    positionStyle () {
-      return 'left: ' + this.leftPos + 'px'
-    }
-  },
-  async mounted () {
-    // Move blue dot
-    // setInterval(() => {
-    //   this.leftPos++
-    // }, 200)
-
-    // MAP: pour chaque element dans ligne11, on applique une transformation
-    // ici : on aura donc un tableau de 11 éléments contenant la valeur retournée par la fonction ci-dessous
-    // ligne11 => this.line
-    this.line = await Promise.all(ligne11.map(async (station) => {
-      const endpoint = 'https://api-ratp.pierre-grimaud.fr/v4/schedules/metros/11/' + station.id + '/' + 'R'
-
-      const response = await axios.get(endpoint)
-      console.log(response.data.result.schedules)
-      return {
-        // id: station.id,
-        // name: station.name,
-        ...station, // = récupérer toutes les clés dans l'objet station (uniquement 'id' et 'name' en fait)
-        schedules: response.data.result.schedules
-      }
-    }))
   }
 }
 </script>
-
-<style scoped>
-.metro {
-  transition: left 0.5s;
-}
-</style>

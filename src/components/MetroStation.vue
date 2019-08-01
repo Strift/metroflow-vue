@@ -13,11 +13,6 @@ export default {
       type: String,
       required: true
     }
-  },
-  data () {
-    return {
-      schedules: []
-    }
   }
 }
 </script>
